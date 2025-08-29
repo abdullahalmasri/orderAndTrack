@@ -1,0 +1,113 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=mydatabase
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=secret
+    ports:
+      - '5432:5432'
+    networks:
+      - app-network
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    ports:
+      - '6379:6379'
+    networks:
+      - app-network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+      - PGADMIN_CONFIG_SERVER_MODE=False
+    ports:
+      - '8080:80'
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+#
+#  order:
+#    build:
+#      context: ./order
+#      dockerfile: Order.Dockerfile
+#    ports:
+#      - '8889:8889'
+#    depends_on:
+#      - postgres
+#      - redis
+#    networks:
+#      - app-network
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/mydatabase
+#      - SPRING_DATASOURCE_USERNAME=myuser
+#      - SPRING_DATASOURCE_PASSWORD=secret
+#
+#  payment:
+#    build:
+#      context: ./payment
+#      dockerfile: Payment.Dockerfile
+#    ports:
+#      - '8890:8890'
+#    depends_on:
+#      - postgres
+#      - redis
+#    networks:
+#      - app-network
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/mydatabase
+#      - SPRING_DATASOURCE_USERNAME=myuser
+#      - SPRING_DATASOURCE_PASSWORD=secret
+#
+#  shipping:
+#    build:
+#      context: ./shipping
+#      dockerfile: Shipping.Dockerfile
+#    ports:
+#      - '8887:8887'
+#    depends_on:
+#      - postgres
+#      - redis
+#    networks:
+#      - app-network
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/mydatabase
+#      - SPRING_DATASOURCE_USERNAME=myuser
+#      - SPRING_DATASOURCE_PASSWORD=secret
+#  prometheus:
+#    image: prom/prometheus:latest
+#    volumes:
+#      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+#    ports:
+#      - '9090:9090'
+#    networks:
+#      - app-network
+#    depends_on:
+#      - order
+#      - payment
+#      - shipping
+#
+#  grafana:
+#    image: grafana/grafana:latest
+#    ports:
+#      - '3000:3000'
+#    networks:
+#      - app-network
+#    depends_on:
+#      - prometheus
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  pgdata:
+  pgadmin-data:

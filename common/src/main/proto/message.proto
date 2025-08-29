@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "org.plasma.common.grpc.proto";
+option java_outer_classname = "CommonServicesProto";
+
+message Data {
+  string service = 1;
+  string data_as_json = 2;  // Standardized field name
+}
+
+message ResponseCreated {
+  string status = 1;
+  string error_message = 2;  // Standardized field name
+}
+
+message ReadData {
+  string name = 1;
+  string data_as_json = 2;  // Consistent with Data
+}
+
+service CommonServices {
+  // Bidirectional streaming: client sends Data, server responds with ResponseCreated
+  rpc DataCreated(stream Data) returns (stream ResponseCreated);
+  // Bidirectional streaming: client requests data, server streams ReadData
+  rpc DataRequest(stream Data) returns (stream ReadData);
+}

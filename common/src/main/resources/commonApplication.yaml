@@ -1,0 +1,40 @@
+spring:
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/mydatabase
+#    username: myuser
+#    password: secret
+#    driver-class-name: org.postgresql.Driver
+#  jpa:
+#    hibernate:
+#      ddl-auto: create # Use validate for prod
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
+#        format_sql: true
+server:
+  port: 8889
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.security: DEBUG
+    org.springframework.boot.actuate: DEBUG
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+    metrics:
+      enabled: true
+    info:
+      enabled: true
+info:
+  app:
+    name: MyApplication
+    version: 1.0.0
+    environment: dev

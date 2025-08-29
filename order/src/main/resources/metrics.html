@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Metrics</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { color: #333; }
+        ul { list-style-type: none; padding: 0; }
+        li { padding: 5px 0; }
+        .metric { cursor: pointer; color: blue; }
+        .metric:hover { text-decoration: underline; }
+    </style>
+    <script>
+        async function fetchMetric(metric) {
+            const response = await fetch(`/actuator/metrics/${metric}`, {
+                headers: { 'Authorization': 'Basic ' + btoa('admin:secret') }
+            });
+            const data = await response.json();
+            alert(JSON.stringify(data, null, 2));
+        }
+    </script>
+</head>
+<body>
+<h1>Metrics</h1>
+<ul>
+    <li th:each="metric : ${metrics}">
+        <span class="metric" th:text="${metric}" th:onclick="|fetchMetric('${metric}')|"></span>
+    </li>
+</ul>
+</body>
+</html>
